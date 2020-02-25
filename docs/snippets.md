@@ -125,8 +125,14 @@ const filepath = 'path/to/file'
   let lastSHA = null
   let lastCommit = null
   let commitsThatMatter = []
-  for (let commit of commits) {
+  for (let i = 0; i < commits.length; i += 1) {
+    let commit = commits[i] 
     try {
+      if (i === commits.length - 1) {
+        // file already existed in first commit
+        commitsThatMatter.push(commit)
+        break;
+      }
       let o = await git.readObject({ dir, oid: commit.oid, filepath })
       if (o.oid !== lastSHA) {
         if (lastSHA !== null) commitsThatMatter.push(lastCommit)
